@@ -1,0 +1,46 @@
+# =====================================================================
+# Practical SQL Query Engineering — local PostgreSQL
+#
+#   docker compose up -d
+#   docker compose ps
+#
+# Not: port 5433 kullanilir; makinende zaten calisan bir PostgreSQL
+# varsa catisma olmasin diye.
+# =====================================================================
+services:
+  postgres:
+    image: postgres:18-alpine
+    container_name: commerceops-db
+    environment:
+      POSTGRES_DB: commerceops
+      POSTGRES_USER: commerceops_app
+      POSTGRES_PASSWORD: commerceops_dev
+      # Deterministic seed icin sabit timezone
+      TZ: UTC
+      PGTZ: UTC
+    ports:
+      - "5433:5432"
+    volumes:
+      - commerceops_data:/var/lib/postgresql/data
+      # Schema ve seed dosyalari container icinden de erisilebilir:
+      #   docker compose exec postgres psql -U commerceops_app -d commerceops \
+      #     -v ON_ERROR_STOP=1 -f /sql/schema/00_schema.sql
+      - ./commerceops:/sql:ro
+    command:
+      - "postgres"
+      - "-c"
+      - "log_min_duration_statement=500"   # 500ms uzeri query'ler loglansin
+      - "-c"
+      - "shared_buffers=256MB"
+      - "-c"
+      - "work_mem=16MB"
+      - "-c"
+      - "track_io_timing=on"               # EXPLAIN (ANALYZE, BUFFERS) icin
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U commerceops_app -d commerceops"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  commerceops_data:

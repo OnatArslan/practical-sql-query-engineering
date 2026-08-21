@@ -1,0 +1,1 @@
+-- JPA/Hibernate tarafindan uretilen SQL buraya kaydedilir (Module 9.4).
