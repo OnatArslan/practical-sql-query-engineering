@@ -5,8 +5,7 @@
 -- Yaklasik hacim: ~400.000 order, ~800.000 order item, ~1.5M inventory movement.
 -- Uretim suresi makinene gore birkac dakika surebilir.
 --
--- Onkosul: 00_schema.sql, 01_constraints.sql, 02_indexes_baseline.sql,
---          10_reference_data.sql calistirilmis olmali.
+-- Onkosul: schema.sql, 10_reference_data.sql calistirilmis olmali.
 -- Sonrasi:  14_verify_seed.sql ve 15_analyze.sql MUTLAKA calistirilir.
 -- =====================================================================
 

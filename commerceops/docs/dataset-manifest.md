@@ -120,7 +120,7 @@ Lab kayitlari `lab_objects` tablosuna yazilir. Temizlemek icin:
 
 ## 5. Baseline index politikasi
 
-`02_indexes_baseline.sql` **bilincli olarak eksiktir**. Child tablolarin FK
+`schema.sql` icindeki baseline index seti **bilincli olarak eksiktir**. Child tablolarin FK
 kolonlarinda index vardir; su alanlar Module 9'da olcumle degerlendirilmek uzere
 bos birakilmistir:
 

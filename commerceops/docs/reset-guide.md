@@ -40,9 +40,7 @@ cd commerceops
 export PGPASSWORD=commerceops_dev
 PSQL="psql -h localhost -p 5433 -U commerceops_app -d commerceops -v ON_ERROR_STOP=1"
 
-$PSQL -f schema/00_schema.sql
-$PSQL -f schema/01_constraints.sql
-$PSQL -f schema/02_indexes_baseline.sql
+$PSQL -f schema/schema.sql
 $PSQL -f seed/10_reference_data.sql
 $PSQL -f seed/11_seed_small.sql
 $PSQL -f seed/14_verify_seed.sql
@@ -52,14 +50,14 @@ $PSQL -f seed/15_analyze.sql
 Tek satirda:
 
 ```bash
-for f in schema/00_schema.sql schema/01_constraints.sql schema/02_indexes_baseline.sql \
+for f in schema/schema.sql \
          seed/10_reference_data.sql seed/11_seed_small.sql \
          seed/14_verify_seed.sql seed/15_analyze.sql; do
   $PSQL -f "$f" || break
 done
 ```
 
-`00_schema.sql` schema'yi **DROP** eder; yeniden kurulum her zaman temiz baslar.
+`schema.sql` schema'yi **DROP** eder; yeniden kurulum her zaman temiz baslar.
 
 ---
 

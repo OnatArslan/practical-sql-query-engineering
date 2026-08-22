@@ -14,9 +14,7 @@ cd commerceops
 export PGPASSWORD=commerceops_dev
 PSQL="psql -h localhost -p 5433 -U commerceops_app -d commerceops -v ON_ERROR_STOP=1"
 
-$PSQL -f schema/00_schema.sql
-$PSQL -f schema/01_constraints.sql
-$PSQL -f schema/02_indexes_baseline.sql
+$PSQL -f schema/schema.sql
 $PSQL -f seed/10_reference_data.sql
 $PSQL -f seed/11_seed_small.sql
 $PSQL -f seed/14_verify_seed.sql
@@ -33,9 +31,9 @@ Detay ve IntelliJ kurulumu: [`commerceops/docs/reset-guide.md`](commerceops/docs
 compose.yaml                     PostgreSQL 18 (port 5433)
 
 commerceops/
-  schema/   00_schema.sql         tablolar (commerceops schema'si)
-            01_constraints.sql    FK, unique, check
-            02_indexes_baseline.sql  BILINCLI OLARAK EKSIK baseline index seti
+  schema/   schema.sql            tablolar + FK/unique/check + BILINCLI OLARAK EKSIK
+                                  baseline index; her tablonun constraint ve index'i
+                                  kendi CREATE TABLE blogunun altinda
   seed/     10_reference_data.sql deterministic helper'lar + kategori agaci + generator
             11_seed_small.sql     small profile  (~12.000 order)
             12_seed_full.sql      full profile   (~400.000 order)

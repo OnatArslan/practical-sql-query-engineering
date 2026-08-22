@@ -24,7 +24,7 @@ services:
       - commerceops_data:/var/lib/postgresql/data
       # Schema ve seed dosyalari container icinden de erisilebilir:
       #   docker compose exec postgres psql -U commerceops_app -d commerceops \
-      #     -v ON_ERROR_STOP=1 -f /sql/schema/00_schema.sql
+      #     -v ON_ERROR_STOP=1 -f /sql/schema/schema.sql
       - ./commerceops:/sql:ro
     command:
       - "postgres"

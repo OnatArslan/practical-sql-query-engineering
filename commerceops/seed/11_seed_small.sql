@@ -4,8 +4,7 @@
 -- Amac: Module 1-6 correctness calismasi. Hizli reset, hizli tam tarama.
 -- Yaklasik hacim: ~12.000 order, ~24.000 order item.
 --
--- Onkosul: 00_schema.sql, 01_constraints.sql, 02_indexes_baseline.sql,
---          10_reference_data.sql calistirilmis olmali.
+-- Onkosul: schema.sql, 10_reference_data.sql calistirilmis olmali.
 -- =====================================================================
 
 SET search_path = commerceops, public;
