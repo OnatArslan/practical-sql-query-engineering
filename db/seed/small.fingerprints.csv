@@ -1,0 +1,10 @@
+table_name,row_count,content_md5
+categories,40,bed8ee16e0262997d6c0e8c125a0d1f1
+customers,2000,983ee54aabe60b81170c2b842e30326b
+inventory_movements,40000,eee74c04aefbad1ab4ca10cd54388412
+order_items,45000,0203c5e1b73e5d69434de0b6e9536d70
+order_status_history,52800,ff4e439e7cd00469bf7edef11bcf4d42
+orders,15000,c97274ad04162893d115e1f3a03f82c0
+payments,18000,4b5e0774034070a26421919077b27bf6
+products,500,65a868bade8434359e748cc506d70b11
+shipments,11250,fa66163d2dd33c64aba2f981c52494f7

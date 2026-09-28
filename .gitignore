@@ -1,0 +1,6 @@
+.DS_Store
+.idea/
+.local/
+db/seed/*.dump
+db/seed/*.dump.sha256
+db/seed/*.tmp.*

@@ -1,0 +1,58 @@
+kind,name,definition
+constraint,categories.categories_name_nonempty,CHECK ((btrim((name)::text) <> ''::text))
+constraint,categories.categories_not_self_parent,CHECK ((parent_id <> id))
+constraint,categories.categories_parent_fk,FOREIGN KEY (parent_id) REFERENCES categories(id)
+constraint,categories.categories_pkey,PRIMARY KEY (id)
+constraint,customers.customers_email_key,UNIQUE (email)
+constraint,customers.customers_email_nonempty,CHECK ((btrim((email)::text) <> ''::text))
+constraint,customers.customers_name_nonempty,CHECK ((btrim((name)::text) <> ''::text))
+constraint,customers.customers_pkey,PRIMARY KEY (id)
+constraint,inventory_movements.inventory_movements_delta_check,CHECK ((quantity_delta <> 0))
+constraint,inventory_movements.inventory_movements_pkey,PRIMARY KEY (id)
+constraint,inventory_movements.inventory_movements_product_fk,FOREIGN KEY (product_id) REFERENCES products(id)
+constraint,inventory_movements.inventory_movements_reason_check,"CHECK (((reason)::text = ANY (ARRAY['RESTOCK'::text, 'SALE'::text, 'RETURN'::text, 'ADJUSTMENT'::text])))"
+constraint,inventory_movements.inventory_movements_sign_check,"CHECK ((((reason)::text = 'ADJUSTMENT'::text) OR (((reason)::text = ANY (ARRAY['RESTOCK'::text, 'RETURN'::text])) AND (quantity_delta > 0)) OR (((reason)::text = 'SALE'::text) AND (quantity_delta < 0))))"
+constraint,order_items.order_items_order_fk,FOREIGN KEY (order_id) REFERENCES orders(id)
+constraint,order_items.order_items_pkey,PRIMARY KEY (id)
+constraint,order_items.order_items_price_check,CHECK (((unit_price >= (0)::numeric) AND (unit_price < 'Infinity'::numeric)))
+constraint,order_items.order_items_product_fk,FOREIGN KEY (product_id) REFERENCES products(id)
+constraint,order_items.order_items_quantity_check,CHECK ((quantity > 0))
+constraint,order_status_history.order_status_history_order_fk,FOREIGN KEY (order_id) REFERENCES orders(id)
+constraint,order_status_history.order_status_history_pkey,PRIMARY KEY (id)
+constraint,order_status_history.order_status_history_status_check,"CHECK (((status)::text = ANY (ARRAY['PENDING'::text, 'PAID'::text, 'SHIPPED'::text, 'COMPLETED'::text, 'CANCELLED'::text])))"
+constraint,orders.orders_customer_fk,FOREIGN KEY (customer_id) REFERENCES customers(id)
+constraint,orders.orders_pkey,PRIMARY KEY (id)
+constraint,orders.orders_status_check,"CHECK (((status)::text = ANY (ARRAY['PENDING'::text, 'PAID'::text, 'SHIPPED'::text, 'COMPLETED'::text, 'CANCELLED'::text])))"
+constraint,payments.payments_amount_check,CHECK (((amount >= (0)::numeric) AND (amount < 'Infinity'::numeric)))
+constraint,payments.payments_order_fk,FOREIGN KEY (order_id) REFERENCES orders(id)
+constraint,payments.payments_pkey,PRIMARY KEY (id)
+constraint,payments.payments_provider_nonempty,CHECK ((btrim((provider)::text) <> ''::text))
+constraint,payments.payments_status_check,"CHECK (((status)::text = ANY (ARRAY['PENDING'::text, 'SUCCEEDED'::text, 'FAILED'::text, 'REFUNDED'::text])))"
+constraint,products.products_category_fk,FOREIGN KEY (category_id) REFERENCES categories(id)
+constraint,products.products_name_nonempty,CHECK ((btrim((name)::text) <> ''::text))
+constraint,products.products_pkey,PRIMARY KEY (id)
+constraint,products.products_price_check,CHECK (((price >= (0)::numeric) AND (price < 'Infinity'::numeric)))
+constraint,shipments.shipments_dates_check,CHECK (((((status)::text = 'PENDING'::text) AND (shipped_at IS NULL) AND (delivered_at IS NULL)) OR (((status)::text = 'SHIPPED'::text) AND (shipped_at IS NOT NULL) AND (delivered_at IS NULL)) OR (((status)::text = 'DELIVERED'::text) AND (shipped_at IS NOT NULL) AND (delivered_at IS NOT NULL) AND (delivered_at >= shipped_at))))
+constraint,shipments.shipments_order_fk,FOREIGN KEY (order_id) REFERENCES orders(id)
+constraint,shipments.shipments_order_key,UNIQUE (order_id)
+constraint,shipments.shipments_pkey,PRIMARY KEY (id)
+constraint,shipments.shipments_status_check,"CHECK (((status)::text = ANY (ARRAY['PENDING'::text, 'SHIPPED'::text, 'DELIVERED'::text])))"
+index,categories.categories_parent_idx,CREATE INDEX categories_parent_idx ON public.categories USING btree (parent_id)
+index,categories.categories_pkey,CREATE UNIQUE INDEX categories_pkey ON public.categories USING btree (id)
+index,customers.customers_email_key,CREATE UNIQUE INDEX customers_email_key ON public.customers USING btree (email)
+index,customers.customers_pkey,CREATE UNIQUE INDEX customers_pkey ON public.customers USING btree (id)
+index,inventory_movements.inventory_movements_pkey,CREATE UNIQUE INDEX inventory_movements_pkey ON public.inventory_movements USING btree (id)
+index,inventory_movements.inventory_movements_product_created_id_idx,"CREATE INDEX inventory_movements_product_created_id_idx ON public.inventory_movements USING btree (product_id, created_at, id)"
+index,order_items.order_items_order_idx,CREATE INDEX order_items_order_idx ON public.order_items USING btree (order_id)
+index,order_items.order_items_pkey,CREATE UNIQUE INDEX order_items_pkey ON public.order_items USING btree (id)
+index,order_items.order_items_product_idx,CREATE INDEX order_items_product_idx ON public.order_items USING btree (product_id)
+index,order_status_history.order_status_history_order_changed_id_idx,"CREATE INDEX order_status_history_order_changed_id_idx ON public.order_status_history USING btree (order_id, changed_at, id)"
+index,order_status_history.order_status_history_pkey,CREATE UNIQUE INDEX order_status_history_pkey ON public.order_status_history USING btree (id)
+index,orders.orders_customer_created_id_idx,"CREATE INDEX orders_customer_created_id_idx ON public.orders USING btree (customer_id, created_at, id)"
+index,orders.orders_pkey,CREATE UNIQUE INDEX orders_pkey ON public.orders USING btree (id)
+index,payments.payments_order_created_id_idx,"CREATE INDEX payments_order_created_id_idx ON public.payments USING btree (order_id, created_at, id)"
+index,payments.payments_pkey,CREATE UNIQUE INDEX payments_pkey ON public.payments USING btree (id)
+index,products.products_category_idx,CREATE INDEX products_category_idx ON public.products USING btree (category_id)
+index,products.products_pkey,CREATE UNIQUE INDEX products_pkey ON public.products USING btree (id)
+index,shipments.shipments_order_key,CREATE UNIQUE INDEX shipments_order_key ON public.shipments USING btree (order_id)
+index,shipments.shipments_pkey,CREATE UNIQUE INDEX shipments_pkey ON public.shipments USING btree (id)
